@@ -94,10 +94,21 @@ def login():
     return render_template('login.html', error=error)
 
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        app.config['USERNAME'] = request.form['username']
+        app.config['PASSWORD'] = request.form['password']
+        session['logged_in'] = True
+        flash('New account was created. You were logged in')
+        return redirect(url_for('show_entries'))
+    return render_template('register.html')
+
+
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('You were logged out, wow')
+    flash('You were logged out')
     return redirect(url_for('hello_page'))
 
 
