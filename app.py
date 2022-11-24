@@ -2,6 +2,11 @@ import sqlite3
 import os
 from flask import Flask, request, redirect, url_for, abort, render_template, flash, session, g, escape
 
+
+# CVs = dict()  # username: table_id
+# users = dict()  # login: password
+# users['admin'] = 'default'
+
 DATABASE = '/tmp/flaskr.db'
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -61,7 +66,9 @@ def add_entry():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, text) values (?, ?)', [request.form['title'], request.form['text']])
+    db.execute('insert into entries (title, text, login) values (?, ?, ?)',
+               [request.form['title'], request.form['text'], session['username']])
+    print(request.form['title'], request.form['text'], session['username'])
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
@@ -78,7 +85,11 @@ def index():
 @app.route('/show_entries')
 def show_entries():
     db = get_db()
-    cur = db.execute('select title, text from entries order by id desc')
+    # try:
+    cur = db.execute(f"select title, text from entries where login='{session['username']}' order by id desc")
+    # except Exception as e:
+    #     print(e)
+    #     return render_template('show_entries.html')
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 
@@ -87,13 +98,14 @@ def show_entries():
 def login():
     error = None
     if request.method == 'POST':
-        if request.form['username'] != app.config['USERNAME']:
+        if request.form['username'] not in users.keys():
             error = 'Invalid username'
-        elif request.form['password'] != app.config['PASSWORD']:
+        elif request.form['password'] != users[request.form['username']]:
             error = 'Invalid password'
         else:
             session['logged_in'] = True
-            flash('You were logged in')
+            session['username'] = request.form['username']
+            flash(f'You were logged in, login is {request.form["username"]}')
             return redirect(url_for('show_entries'))
     return render_template('login.html', error=error)
 
@@ -102,13 +114,13 @@ def login():
 def register():
     error = None
     if request.method == 'POST':
-        if request.form['username'] == app.config['USERNAME']:
+        if request.form['username'] in users.keys():
             error = "You can't use this username (username is already taken)"
         else:
-            app.config['USERNAME'] = request.form['username']
-            app.config['PASSWORD'] = request.form['password']
+            users[request.form['username']] = request.form['password']
             session['logged_in'] = True
-            flash('New account was created. You were logged in')
+            session['username'] = request.form['username']
+            flash(f'New account was created, login is {request.form["username"]}')
             return redirect(url_for('show_entries'))
     return render_template('register.html', error=error)
 
