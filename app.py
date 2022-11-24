@@ -1,8 +1,8 @@
 import sqlite3
 import os
-from flask import Flask, request, redirect, url_for, abort, render_template, flash, session, g, escape, send_file
+from flask import Flask, request, redirect, url_for, abort, render_template, flash, session, g, escape, send_file, \
+    get_flashed_messages
 from pdfkit import from_file, from_string
-
 
 # CVs = dict()  # username: table_id
 users = dict()  # login: password
@@ -72,7 +72,7 @@ def add_entry():
                [request.form['title'], request.form['contact'], request.form['education'],
                 request.form['skills'], request.form['description'], session['username']])
     db.commit()
-    flash('New entry was successfully posted')
+    # flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
 
 
@@ -105,7 +105,7 @@ def login():
         else:
             session['logged_in'] = True
             session['username'] = request.form['username']
-            flash(f'You were logged in, login is {request.form["username"]}')
+            # flash(f'You were logged in, login is {request.form["username"]}')
             return redirect(url_for('show_entries'))
     return render_template('login.html', error=error)
 
@@ -120,7 +120,7 @@ def register():
             users[request.form['username']] = request.form['password']
             session['logged_in'] = True
             session['username'] = request.form['username']
-            flash(f'New account was created, login is {request.form["username"]}')
+            # flash(f'New account was created, login is {request.form["username"]}')
             return redirect(url_for('show_entries'))
     return render_template('register.html', error=error)
 
@@ -128,7 +128,7 @@ def register():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    flash('You were logged out')
+    # flash('You were logged out')
     return redirect(url_for('hello_page'))
 
 
@@ -151,7 +151,7 @@ def create_cv():
     entries = cur.fetchall()
     if len(entries) > 0:
         return render_template('cv.html', entries=entries)
-    flash('You should to save your CV as a draft first')
+    # flash('You should to save your CV as a draft first')
     return render_template('show_entries.html', entries=entries)
 
 
@@ -185,7 +185,7 @@ def create_pdf():
         """
         from_string(text, 'cv.pdf')
         return send_file('cv.pdf', as_attachment=True)
-    flash('You should to save your CV as a draft first')
+    # flash('You should to save your CV as a draft first')
     return render_template('show_entries.html', entries=entries)
 
 
