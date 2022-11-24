@@ -128,7 +128,7 @@ def register():
 @app.route('/logout')
 def logout():
     session.pop('logged_in', None)
-    # flash('You were logged out')
+    error = 'You were logged out'
     return redirect(url_for('hello_page'))
 
 
@@ -151,8 +151,8 @@ def create_cv():
     entries = cur.fetchall()
     if len(entries) > 0:
         return render_template('cv.html', entries=entries)
-    # flash('You should to save your CV as a draft first')
-    return render_template('show_entries.html', entries=entries)
+    error = 'You should to save your CV as a draft first'
+    return render_template('show_entries.html', entries=entries, error=error)
 
 
 @app.route('/pdf_helper', methods=['POST'])
@@ -170,7 +170,7 @@ def create_pdf():
         f"from entries where login='{session['username']}' "
         f"order by id desc limit 1")
     entries = cur.fetchone()
-    if len(entries) > 0:
+    if entries is not None and len(entries) > 0:
         text = f"""
         <!DOCTYPE html>
         <html>
@@ -185,8 +185,8 @@ def create_pdf():
         """
         from_string(text, 'cv.pdf')
         return send_file('cv.pdf', as_attachment=True)
-    # flash('You should to save your CV as a draft first')
-    return render_template('show_entries.html', entries=entries)
+    error = 'You should to save your CV as a draft first'
+    return render_template('show_entries.html', entries=entries, error=error)
 
 
 @app.errorhandler(404)

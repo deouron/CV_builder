@@ -12,6 +12,13 @@
     <ul class="nav justify-content-center">
 
         {% if not session.logged_in %}
+        <ul class="nav justify-content-center">
+            <div class="form-group">
+                {% if error %}
+                <p class=error><strong>Error:</strong> {{ error }}
+                    {% endif %}
+            </div>
+        </ul>
         <li class="nav-item">
             <a href="{{ url_for('login') }}" class="nav-link active">log in</a>
         </li>

@@ -15,6 +15,7 @@
         <p class="font-weight-bold text-uppercase">To save your CV save it as a draft first</p>
     </ul>
 
+    {% if entries %}
     {% for entry in entries %}
     {% if session.logged_in %}
     <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
@@ -48,16 +49,24 @@
         </div>
     </form>
     {% endif %}
-<!--    <div class="d-flex justify-content-center">-->
-<!--    <h1>Your draft:</h1>-->
-<!--    </div>-->
-<!--    <h2>Your name:</h2> {{ entry.title|safe }}-->
-<!--    <h2>Contact info:</h2> {{ entry.contact|safe }}-->
-<!--    <h2>Education:</h2> {{ entry.education|safe }}-->
-<!--    <h2>Skills:</h2> {{ entry.skills|safe }}-->
-<!--    <h2>CV's description:</h2> {{ entry.description|safe }}-->
+    <!--    <div class="d-flex justify-content-center">-->
+    <!--    <h1>Your draft:</h1>-->
+    <!--    </div>-->
+    <!--    <h2>Your name:</h2> {{ entry.title|safe }}-->
+    <!--    <h2>Contact info:</h2> {{ entry.contact|safe }}-->
+    <!--    <h2>Education:</h2> {{ entry.education|safe }}-->
+    <!--    <h2>Skills:</h2> {{ entry.skills|safe }}-->
+    <!--    <h2>CV's description:</h2> {{ entry.description|safe }}-->
+    {% endfor %}
     {% else %}
     {% if session.logged_in %}
+    <ul class="nav justify-content-center">
+        <div class="form-group">
+            {% if error %}
+            <p class=error><strong>Error:</strong> {{ error }}
+                {% endif %}
+        </div>
+    </ul>
     <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
         <div class="form-group m-1">
             <label>Your name</label>
@@ -89,7 +98,7 @@
         </div>
     </form>
     {% endif %}
-        {% endfor %}
+    {% endif %}
 
 </ul>
 
