@@ -6,7 +6,7 @@
     <dt>Your name:
     <dd><input type=text size=30 name=title>
     <dt>CV's text:
-    <dd><textarea name=text rows=5 cols=40></textarea> <dd><input type=submit value=Share>
+    <dd><textarea name=text rows=5 cols=40></textarea> <dd><input type=submit value=Save>
     </dl>
     </form>
 {% endif %}
@@ -14,7 +14,9 @@
 <ul class=entries>
 
 {% for entry in entries %}
-    <li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}
+    <li><h2>Your draft:</h2>
+        <h2>{{ entry.title }}</h2>
+        <h2>{{ entry.text|safe }}</h2>
 {% else %}
     <li><em>No CV</em>
 {% endfor %}

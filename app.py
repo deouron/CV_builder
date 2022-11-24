@@ -4,8 +4,8 @@ from flask import Flask, request, redirect, url_for, abort, render_template, fla
 
 
 # CVs = dict()  # username: table_id
-# users = dict()  # login: password
-# users['admin'] = 'default'
+users = dict()  # login: password
+users['admin'] = 'default'
 
 DATABASE = '/tmp/flaskr.db'
 DEBUG = True
@@ -86,7 +86,7 @@ def index():
 def show_entries():
     db = get_db()
     # try:
-    cur = db.execute(f"select title, text from entries where login='{session['username']}' order by id desc")
+    cur = db.execute(f"select title, text from entries where login='{session['username']}' order by id desc limit 1")
     # except Exception as e:
     #     print(e)
     #     return render_template('show_entries.html')
