@@ -96,13 +96,17 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    error = None
     if request.method == 'POST':
-        app.config['USERNAME'] = request.form['username']
-        app.config['PASSWORD'] = request.form['password']
-        session['logged_in'] = True
-        flash('New account was created. You were logged in')
-        return redirect(url_for('show_entries'))
-    return render_template('register.html')
+        if request.form['username'] == app.config['USERNAME']:
+            error = "You can't use this username (this username is already taken)"
+        else:
+            app.config['USERNAME'] = request.form['username']
+            app.config['PASSWORD'] = request.form['password']
+            session['logged_in'] = True
+            flash('New account was created. You were logged in')
+            return redirect(url_for('show_entries'))
+    return render_template('register.html', error=error)
 
 
 @app.route('/logout')
