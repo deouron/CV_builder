@@ -67,8 +67,8 @@ def add_entry():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, description, login) values (?, ?, ?)',
-               [request.form['title'], request.form['description'], session['username']])
+    db.execute('insert into entries (title, education, description, login) values (?, ?, ?, ?)',
+               [request.form['title'], request.form['education'], request.form['description'], session['username']])
     print(request.form['title'], request.form['description'], session['username'])
     db.commit()
     flash('New entry was successfully posted')
@@ -87,7 +87,7 @@ def index():
 def show_entries():
     db = get_db()
     # try:
-    cur = db.execute(f"select title, description from entries where login='{session['username']}' order by id desc limit 1")
+    cur = db.execute(f"select title, education, description from entries where login='{session['username']}' order by id desc limit 1")
     # except Exception as e:
     #     print(e)
     #     return render_template('show_entries.html')
@@ -146,7 +146,7 @@ def create_cv():
         abort(401)
     db = get_db()
     cur = db.execute(
-        f"select title, text from entries where login='{session['username']}' order by id desc limit 1")
+        f"select title, education, description from entries where login='{session['username']}' order by id desc limit 1")
     entries = cur.fetchall()
     if len(entries) > 0:
         return render_template('cv.html', entries=entries)
@@ -165,7 +165,7 @@ def pdf_helper():
 def create_pdf():
     db = get_db()
     cur = db.execute(
-        f"select title, description from entries where login='{session['username']}' order by id desc limit 1")
+        f"select title, education, description from entries where login='{session['username']}' order by id desc limit 1")
     entries = cur.fetchone()
     if len(entries) > 0:
         text = f"""
@@ -173,6 +173,7 @@ def create_pdf():
         <html>
         <body>
             <h2>Name:</h2> {entries['title']}
+            <h2>Education:</h2> {entries['education']}
             <h2>Description:</h2> {entries['description'] }
         <body>
         </html>

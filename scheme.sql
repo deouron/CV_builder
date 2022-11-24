@@ -3,5 +3,6 @@ create table entries (
     id integer primary key autoincrement,
     title text not null,
     description text not null,
+    education text not null,
     login text not null
 );

@@ -17,14 +17,17 @@
         <dl>
             <dt>Your name:
             <dd><input type=text size=30 name=title value="{{ entry.title }}" placeholder="your name">
+            <dt>Education:
+            <dd><textarea name=education rows=5 cols=40 placeholder="place of your education">{{ entry.education|safe }}</textarea>
             <dt>CV's description:
             <dd><textarea name=description rows=5 cols=40" placeholder="CV's description">{{ entry.description|safe }}</textarea>
             <dd><input type=submit value="Save Draft">
         </dl>
         </form>
     {% endif %}
-    <li><h1>Your draft:</h1>
+        <h1>Your draft:</h1>
         <h2>Your name:</h2> {{ entry.title }}
+        <h2>Education:</h2> {{ entry.education|safe }}
         <h2>CV's description:</h2> {{ entry.description|safe }}
 {% else %}
         {% if session.logged_in %}
@@ -32,6 +35,8 @@
         <dl>
             <dt>Your name:
             <dd><input type=text size=30 name=title placeholder="your name">
+            <dt>Education:
+            <dd><textarea name=education rows=5 cols=40 placeholder="place of your education"></textarea>
             <dt>CV's description:
             <dd><textarea name=description rows=5 cols=40 placeholder="CV's description"></textarea>
             <dd><input type=submit value="Save Draft">

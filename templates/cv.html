@@ -2,6 +2,7 @@
 
 {% for entry in entries %}
     <h2>Name:</h2> {{ entry.title }}
+    <h2>Education:</h2> {{ entry.education|safe }}
     <h2>Description:</h2> {{ entry.description|safe }}
 {% else %}
     <h1>No CV</h1>
