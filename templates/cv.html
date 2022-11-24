@@ -1,6 +1,7 @@
 <ul class=cv>
 
 {% for entry in entries %}
+    <h1>Photo:</h1> {{ entry.file|safe }}
     <h1>Name:</h1> {{ entry.title|safe }}
     <h1>Contact:</h1> {{ entry.contact|safe }}
     <h1>Education:</h1> {{ entry.education|safe }}

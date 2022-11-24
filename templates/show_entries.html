@@ -19,6 +19,22 @@
     {% for entry in entries %}
     {% if session.logged_in %}
     <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+        <div class="container">
+            <label>Your photo</label>
+            <div class="row">
+                <form action="{{ url_for('upload_image') }}" method=post class=upload_image
+                      enctype="multipart/form-data">
+                    <dl>
+                        <p>
+                            <input type="file" name="file" class="form-control" autocomplete="off" required>
+                        </p>
+                    </dl>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-info">Upload photo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="form-group m-1">
             <label>Your name</label>
             <input class="form-control" type=text size=30 name="title" value="{{ entry.title }}"
@@ -68,6 +84,22 @@
         </div>
     </ul>
     <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+        <div class="container">
+            <label>Your photo</label>
+            <div class="row">
+                <form action="{{ url_for('upload_image') }}" method=post class=upload_image
+                      enctype="multipart/form-data">
+                    <dl>
+                        <p>
+                            <input type="file" name="file" class="form-control" autocomplete="off" required>
+                        </p>
+                    </dl>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-info">Upload photo</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="form-group m-1">
             <label>Your name</label>
             <input class="form-control" type=text size=30 name="title"

@@ -1,8 +1,10 @@
 import sqlite3
 import os
 from flask import Flask, request, redirect, url_for, abort, render_template, flash, session, g, escape, send_file, \
-    get_flashed_messages
+    get_flashed_messages, send_from_directory, render_template
 from pdfkit import from_file, from_string
+from werkzeug.utils import secure_filename
+import urllib.request
 
 # CVs = dict()  # username: table_id
 users = dict()  # login: password
@@ -16,6 +18,8 @@ PASSWORD = 'default'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+app.secret_key = SECRET_KEY
 
 app.config.update(dict(
     DATABASE=os.path.join(app.root_path, 'flaskr.db'),
@@ -67,9 +71,9 @@ def add_entry():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, contact, education, skills, description, login)'
-               ' values (?, ?, ?, ?, ?, ?)',
-               [request.form['title'], request.form['contact'], request.form['education'],
+    db.execute('insert into entries (file, title, contact, education, skills, description, login)'
+               ' values (?, ?, ?, ?, ?, ?, ?)',
+               [request.form['file'], request.form['title'], request.form['contact'], request.form['education'],
                 request.form['skills'], request.form['description'], session['username']])
     db.commit()
     # flash('New entry was successfully posted')
@@ -87,7 +91,7 @@ def index():
 @app.route('/show_entries')
 def show_entries():
     db = get_db()
-    cur = db.execute(f"select title, contact, education, skills, description "
+    cur = db.execute(f"select file, title, contact, education, skills, description "
                      f"from entries where login='{session['username']}' "
                      f"order by id desc limit 1")
     entries = cur.fetchall()
@@ -145,7 +149,7 @@ def create_cv():
         abort(401)
     db = get_db()
     cur = db.execute(
-        f"select title, contact, education, skills, description "
+        f"select file, title, contact, education, skills, description "
         f"from entries where login='{session['username']}' "
         f"order by id desc limit 1")
     entries = cur.fetchall()
@@ -166,7 +170,7 @@ def pdf_helper():
 def create_pdf():
     db = get_db()
     cur = db.execute(
-        f"select title, contact, education, skills, description "
+        f"select file, title, contact, education, skills, description "
         f"from entries where login='{session['username']}' "
         f"order by id desc limit 1")
     entries = cur.fetchone()
@@ -175,6 +179,7 @@ def create_pdf():
         <!DOCTYPE html>
         <html>
         <body>
+        <img src={entries['file']}> 
             <h2>Name:</h2> {entries['title']}
             <h2>Contact:</h2> {entries['contact']}
             <h2>Education:</h2> {entries['education']}
@@ -187,6 +192,30 @@ def create_pdf():
         return send_file('cv.pdf', as_attachment=True)
     error = 'You should to save your CV as a draft first'
     return render_template('show_entries.html', entries=entries, error=error)
+
+
+def is_allowed(file):
+    ALLOWED_FORMATS = {'png', 'jpeg', 'jpg'}
+    return '.' in file and file.rsplit('.', 1)[1].lower() in ALLOWED_FORMATS
+
+
+@app.route('/', methods=['POST'])
+def upload_image():
+    if 'file' not in request.files:
+        error = 'No image'
+        return render_template('show_entries.html', error=error)
+    file = request.files['file']
+    if file.name == "":
+        error = 'No image'
+        return render_template('show_entries.html', error=error)
+    if file and is_allowed(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        error = 'file was uploaded'
+        return render_template('show_entries.html', filename=filename, error=error)
+    else:
+        error = "file's format is not allowed"
+        return render_template('show_entries.html', error=error)
 
 
 @app.errorhandler(404)
