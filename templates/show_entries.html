@@ -1,23 +1,33 @@
 {% extends "layout.html" %} {% block body %}
 
-{% if session.logged_in %}
-    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
-    <dl>
-    <dt>Your name:
-    <dd><input type=text size=30 name=title>
-    <dt>CV's text:
-    <dd><textarea name=text rows=5 cols=40></textarea> <dd><input type=submit value=Save>
-    </dl>
-    </form>
-{% endif %}
-
 <ul class=entries>
 
 {% for entry in entries %}
-    <li><h2>Your draft:</h2>
-        <h2>{{ entry.title }}</h2>
-        <h2>{{ entry.text|safe }}</h2>
+    {% if session.logged_in %}
+        <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+        <dl>
+        <dt>Your name:
+        <dd><input type=text size=30 name=title value="{{ entry.title }}">
+        <dt>CV's text:
+        <dd><textarea name=text rows=5 cols=40">{{ entry.text|safe }}</textarea>
+            <dd><input type=submit value=Save>
+        </dl>
+        </form>
+    {% endif %}
+    <li><h1>Your draft:</h1>
+        <h2>Your name:</h2> {{ entry.title }}
+        <h2>CV's text:</h2> {{ entry.text|safe }}
 {% else %}
+        {% if session.logged_in %}
+        <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+        <dl>
+        <dt>Your name:
+        <dd><input type=text size=30 name=title>
+        <dt>CV's text:
+        <dd><textarea name=text rows=5 cols=40></textarea> <dd><input type=submit value=Save>
+        </dl>
+        </form>
+    {% endif %}
     <li><em>No CV</em>
 {% endfor %}
 
