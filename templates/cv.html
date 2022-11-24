@@ -1,11 +1,11 @@
 <ul class=cv>
 
 {% for entry in entries %}
-    <h2>Name:</h2> {{ entry.title|safe }}
-    <h2>Contact:</h2> {{ entry.contact|safe }}
-    <h2>Education:</h2> {{ entry.education|safe }}
-    <h2>Skills:</h2> {{ entry.skills|safe }}
-    <h2>Description:</h2> {{ entry.description|safe }}
+    <h1>Name:</h1> {{ entry.title|safe }}
+    <h1>Contact:</h1> {{ entry.contact|safe }}
+    <h1>Education:</h1> {{ entry.education|safe }}
+    <h1>Skills:</h1> {{ entry.skills|safe }}
+    <h1>Description:</h1> {{ entry.description|safe }}
 {% else %}
     <h1>No CV</h1>
 {% endfor %}

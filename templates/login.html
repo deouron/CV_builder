@@ -1,20 +1,37 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h2>Login</h2>
+<ul class="nav justify-content-center">
 
-{% if error %}
+    <!--    <li class="nav-item">-->
+    <!--        <h2>Login</h2>-->
+    <!--    </li>-->
+
+    {% if error %}
     <p class=error><strong>Error:</strong> {{ error }}
-{% endif %}
+        {% endif %}
 
-<form action="{{ url_for('login') }}" method=post>
-<dl>
-<dt>Username:
-<dd><input type=text name=username>
-<dt>Password:
-<dd><input type=password name=password>
-<dd><input type=submit value=Login>
-</dl>
-</form>
+    <form action="{{ url_for('login') }}" method=post>
+        <div class="form-group">
+            <label>Username</label>
+            <input class="form-control" type=text size=30 name="username"
+                   placeholder="input your username">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input class="form-control" type=password size=30 name="password"
+                   placeholder="input your password">
+        </div>
+        <ul class="nav justify-content-center mb-2 p-2">
+            <button type="submit" class="btn btn-success" value=Login>Login</button>
+        </ul>
+        <!--        <dt>Username:-->
+        <!--        <dd><input type=text name=username>-->
+        <!--        <dt>Password:-->
+        <!--        <dd><input type=password name=password>-->
+        <!--        <dd><input type=submit value=Login>-->
+    </form>
+
+</ul>
 
 {% endblock %}

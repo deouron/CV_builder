@@ -7,22 +7,29 @@
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
 <div class=page>
-<h1>CV Builder</h1>
+    <!--<h1>CV Builder</h1>-->
+    <h1 class="text-center">CV Builder</h1>
 
-<div class=metanav>
+    <ul class="nav justify-content-center">
 
-{% if not session.logged_in %}
-    <a href="{{ url_for('login') }}">log in</a>
-    <a href="{{ url_for('register') }}">register</a> {% else %}
-    <a href="{{ url_for('logout') }}">log out</a> {% endif %}
+        {% if not session.logged_in %}
+        <li class="nav-item">
+            <a href="{{ url_for('login') }}" class="nav-link active">log in</a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ url_for('register') }}" class="nav-link active">register</a> {% else %}
+        </li>
+        <li class="nav-item">
+            <a href="{{ url_for('logout') }}" class="nav-link active">log out</a> {% endif %}
+        </li>
 
-</div>
+    </ul>
 
-{% for message in get_flashed_messages() %}
+    {% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
-{% endfor %}
+    {% endfor %}
 
-{% block body %}{% endblock %}
+    {% block body %}{% endblock %}
 
 </div>
 
