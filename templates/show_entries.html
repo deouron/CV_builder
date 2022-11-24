@@ -2,59 +2,87 @@
 
 <ul class=entries>
 
-<form action="{{ url_for('cv_helper') }}" method=post class=cv_helper>
-    <h2>To save your CV save it as a draft first</h2>
-    <input type=submit value="Show CV">
-</form>
+    <form action="{{ url_for('cv_helper') }}" method=post class=cv_helper>
+        <h2>To save your CV save it as a draft first</h2>
+        <!--    <input type=submit value="Show CV">-->
+        <button type="submit" class="btn btn-primary btn-lg btn-block w-50 mr-10">Show CV</button>
+    </form>
 
-<form action="{{ url_for('pdf_helper') }}" method=post class=pdf_helper>
-    <input type=submit value="Create pdf">
-</form>
+    <form action="{{ url_for('pdf_helper') }}" method=post class=pdf_helper>
+        <!--    <input type=submit value="Create pdf">-->
+        <button type="submit" class="btn btn-secondary btn-lg btn-block w-50 mr-10">Create pdf</button>
+    </form>
 
-{% for entry in entries %}
+    {% for entry in entries %}
     {% if session.logged_in %}
-        <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
-        <dl>
-            <dt>Your name:
-            <dd><input type=text size=30 name=title value="{{ entry.title }}" placeholder="your name">
-            <dt>Contact info:
-            <dd><input type=text size=30 name=contact value="{{ entry.contact }}" placeholder="phone number, email, etc">
-            <dt>Education:
-            <dd><input type=text size=30 name=education value="{{ entry.education }}" placeholder="place of your education">
-            <dt>Skills:
-            <dd><input type=text size=30 name=skills value="{{ entry.skills }}" placeholder="some of your skills">
-            <dt>CV's description:
-            <dd><textarea name=description rows=5 cols=40" placeholder="CV's description">{{ entry.description|safe }}</textarea>
-            <dd><input type=submit value="Save Draft">
-        </dl>
-        </form>
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+        <div class="form-group">
+            <label>Your name</label>
+            <input class="form-control" type=text size=30 name="title" value="{{ entry.title }}"
+                   placeholder="input your name">
+        </div>
+        <div class="form-group">
+            <label>Contact info</label>
+            <input class="form-control" type=text size=30 name="contact" value="{{ entry.contact }}"
+                   placeholder="phone number, email, etc">
+        </div>
+        <div class="form-group">
+            <label>Education</label>
+            <input class="form-control" type=text size=30 name="education" value="{{ entry.education }}"
+                   placeholder="place of your education">
+        </div>
+        <div class="form-group">
+            <label>Skills</label>
+            <input class="form-control" type=text size=30 name="skills" value="{{ entry.skills }}"
+                   placeholder="some of your skills">
+        </div>
+        <div class="form-group">
+            <label>CV's description</label>
+            <input class="form-control" type=text size=30 name="description" value="{{ entry.description|safe }}"
+                   placeholder="CV's description">
+        </div>
+        <button type="submit" class="btn btn-success">Save Draft</button>
+    </form>
     {% endif %}
-        <h1>Your draft:</h1>
-        <h2>Your name:</h2> {{ entry.title|safe }}
-        <h2>Contact info:</h2> {{ entry.contact|safe }}
-        <h2>Education:</h2> {{ entry.education|safe }}
-        <h2>Skills:</h2> {{ entry.skills|safe }}
-        <h2>CV's description:</h2> {{ entry.description|safe }}
-{% else %}
-        {% if session.logged_in %}
-        <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
-        <dl>
-            <dt>Your name:
-            <dd><input type=text size=30 name=title placeholder="your name">
-            <dt>Contact info:
-            <dd><input type=text size=30 name=contact placeholder="phone number, email, etc">
-            <dt>Education:
-            <dd><input type=text size=30 name=education placeholder="place of your education">
-            <dt>Skills:
-            <dd><input type=text size=30 name=skills placeholder="some of your skills">
-            <dt>CV's description:
-            <dd><textarea name=description rows=5 cols=40 placeholder="CV's description"></textarea>
-            <dd><input type=submit value="Save Draft">
-        </dl>
-        </form>
+    <h1>Your draft:</h1>
+    <h2>Your name:</h2> {{ entry.title|safe }}
+    <h2>Contact info:</h2> {{ entry.contact|safe }}
+    <h2>Education:</h2> {{ entry.education|safe }}
+    <h2>Skills:</h2> {{ entry.skills|safe }}
+    <h2>CV's description:</h2> {{ entry.description|safe }}
+    {% else %}
+    {% if session.logged_in %}
+    <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+        <div class="form-group">
+            <label>Your name</label>
+            <input class="form-control" type=text size=30 name="title"
+                   placeholder="input your name">
+        </div>
+        <div class="form-group">
+            <label>Contact info</label>
+            <input class="form-control" type=text size=30 name="contact"
+                   placeholder="phone number, email, etc">
+        </div>
+        <div class="form-group">
+            <label>Education</label>
+            <input class="form-control" type=text size=30 name="education"
+                   placeholder="place of your education">
+        </div>
+        <div class="form-group">
+            <label>Skills</label>
+            <input class="form-control" type=text size=30 name="skills"
+                   placeholder="some of your skills">
+        </div>
+        <div class="form-group">
+            <label>CV's description</label>
+            <input class="form-control" type=text size=30 name="description"
+                   placeholder="CV's description">
+        </div>
+        <button type="submit" class="btn btn-success">Save Draft</button>
+    </form>
     {% endif %}
     <li><em>No CV</em>
-{% endfor %}
+        {% endfor %}
 
 </ul>
 
