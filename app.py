@@ -67,9 +67,10 @@ def add_entry():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, education, description, login) values (?, ?, ?, ?)',
-               [request.form['title'], request.form['education'], request.form['description'], session['username']])
-    print(request.form['title'], request.form['description'], session['username'])
+    db.execute('insert into entries (title, contact, education, skills, description, login)'
+               ' values (?, ?, ?, ?, ?, ?)',
+               [request.form['title'], request.form['contact'], request.form['education'],
+                request.form['skills'], request.form['description'], session['username']])
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
@@ -86,11 +87,9 @@ def index():
 @app.route('/show_entries')
 def show_entries():
     db = get_db()
-    # try:
-    cur = db.execute(f"select title, education, description from entries where login='{session['username']}' order by id desc limit 1")
-    # except Exception as e:
-    #     print(e)
-    #     return render_template('show_entries.html')
+    cur = db.execute(f"select title, contact, education, skills, description "
+                     f"from entries where login='{session['username']}' "
+                     f"order by id desc limit 1")
     entries = cur.fetchall()
     return render_template('show_entries.html', entries=entries)
 
@@ -146,7 +145,9 @@ def create_cv():
         abort(401)
     db = get_db()
     cur = db.execute(
-        f"select title, education, description from entries where login='{session['username']}' order by id desc limit 1")
+        f"select title, contact, education, skills, description "
+        f"from entries where login='{session['username']}' "
+        f"order by id desc limit 1")
     entries = cur.fetchall()
     if len(entries) > 0:
         return render_template('cv.html', entries=entries)
@@ -165,7 +166,9 @@ def pdf_helper():
 def create_pdf():
     db = get_db()
     cur = db.execute(
-        f"select title, education, description from entries where login='{session['username']}' order by id desc limit 1")
+        f"select title, contact, education, skills, description "
+        f"from entries where login='{session['username']}' "
+        f"order by id desc limit 1")
     entries = cur.fetchone()
     if len(entries) > 0:
         text = f"""
@@ -173,16 +176,14 @@ def create_pdf():
         <html>
         <body>
             <h2>Name:</h2> {entries['title']}
+            <h2>Contact:</h2> {entries['contact']}
             <h2>Education:</h2> {entries['education']}
-            <h2>Description:</h2> {entries['description'] }
+            <h2>Skills:</h2> {entries['skills']}
+            <h2>Description:</h2> {entries['description']}
         <body>
         </html>
         """
-        # text = 'Name: ' + str(entries['title']) + \
-        #        '\nDescription: ' + str(entries['description'])
         from_string(text, 'cv.pdf')
-        # with open('templates/cv.html') as f:
-        #     from_file(f, 'cv.pdf')
         return send_file('cv.pdf', as_attachment=True)
     flash('You should to save your CV as a draft first')
     return render_template('show_entries.html', entries=entries)

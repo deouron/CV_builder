@@ -17,8 +17,12 @@
         <dl>
             <dt>Your name:
             <dd><input type=text size=30 name=title value="{{ entry.title }}" placeholder="your name">
+            <dt>Contact info:
+            <dd><input type=text size=30 name=contact value="{{ entry.contact }}" placeholder="phone number, email, etc">
             <dt>Education:
-            <dd><textarea name=education rows=5 cols=40 placeholder="place of your education">{{ entry.education|safe }}</textarea>
+            <dd><input type=text size=30 name=education value="{{ entry.education }}" placeholder="place of your education">
+            <dt>Skills:
+            <dd><input type=text size=30 name=skills value="{{ entry.skills }}" placeholder="some of your skills">
             <dt>CV's description:
             <dd><textarea name=description rows=5 cols=40" placeholder="CV's description">{{ entry.description|safe }}</textarea>
             <dd><input type=submit value="Save Draft">
@@ -26,8 +30,10 @@
         </form>
     {% endif %}
         <h1>Your draft:</h1>
-        <h2>Your name:</h2> {{ entry.title }}
+        <h2>Your name:</h2> {{ entry.title|safe }}
+        <h2>Contact info:</h2> {{ entry.contact|safe }}
         <h2>Education:</h2> {{ entry.education|safe }}
+        <h2>Skills:</h2> {{ entry.skills|safe }}
         <h2>CV's description:</h2> {{ entry.description|safe }}
 {% else %}
         {% if session.logged_in %}
@@ -35,8 +41,12 @@
         <dl>
             <dt>Your name:
             <dd><input type=text size=30 name=title placeholder="your name">
+            <dt>Contact info:
+            <dd><input type=text size=30 name=contact placeholder="phone number, email, etc">
             <dt>Education:
-            <dd><textarea name=education rows=5 cols=40 placeholder="place of your education"></textarea>
+            <dd><input type=text size=30 name=education placeholder="place of your education">
+            <dt>Skills:
+            <dd><input type=text size=30 name=skills placeholder="some of your skills">
             <dt>CV's description:
             <dd><textarea name=description rows=5 cols=40 placeholder="CV's description"></textarea>
             <dd><input type=submit value="Save Draft">
