@@ -1,6 +1,7 @@
 import sqlite3
 import os
-from flask import Flask, request, redirect, url_for, abort, render_template, flash, session, g, escape
+from flask import Flask, request, redirect, url_for, abort, render_template, flash, session, g, escape, send_file
+from pdfkit import from_file, from_string
 
 
 # CVs = dict()  # username: table_id
@@ -66,9 +67,9 @@ def add_entry():
     if not session.get('logged_in'):
         abort(401)
     db = get_db()
-    db.execute('insert into entries (title, text, login) values (?, ?, ?)',
-               [request.form['title'], request.form['text'], session['username']])
-    print(request.form['title'], request.form['text'], session['username'])
+    db.execute('insert into entries (title, description, login) values (?, ?, ?)',
+               [request.form['title'], request.form['description'], session['username']])
+    print(request.form['title'], request.form['description'], session['username'])
     db.commit()
     flash('New entry was successfully posted')
     return redirect(url_for('show_entries'))
@@ -86,7 +87,7 @@ def index():
 def show_entries():
     db = get_db()
     # try:
-    cur = db.execute(f"select title, text from entries where login='{session['username']}' order by id desc limit 1")
+    cur = db.execute(f"select title, description from entries where login='{session['username']}' order by id desc limit 1")
     # except Exception as e:
     #     print(e)
     #     return render_template('show_entries.html')
@@ -130,6 +131,60 @@ def logout():
     session.pop('logged_in', None)
     flash('You were logged out')
     return redirect(url_for('hello_page'))
+
+
+@app.route('/cv_helper', methods=['POST'])
+def cv_helper():
+    if not session.get('logged_in'):
+        abort(401)
+    return redirect(url_for('create_cv'))
+
+
+@app.route('/create_cv')
+def create_cv():
+    if not session.get('logged_in'):
+        abort(401)
+    db = get_db()
+    cur = db.execute(
+        f"select title, text from entries where login='{session['username']}' order by id desc limit 1")
+    entries = cur.fetchall()
+    if len(entries) > 0:
+        return render_template('cv.html', entries=entries)
+    flash('You should to save your CV as a draft first')
+    return render_template('show_entries.html', entries=entries)
+
+
+@app.route('/pdf_helper', methods=['POST'])
+def pdf_helper():
+    if not session.get('logged_in'):
+        abort(401)
+    return redirect(url_for('create_pdf'))
+
+
+@app.route('/create_pdf')
+def create_pdf():
+    db = get_db()
+    cur = db.execute(
+        f"select title, description from entries where login='{session['username']}' order by id desc limit 1")
+    entries = cur.fetchone()
+    if len(entries) > 0:
+        text = f"""
+        <!DOCTYPE html>
+        <html>
+        <body>
+            <h2>Name:</h2> {entries['title']}
+            <h2>Description:</h2> {entries['description'] }
+        <body>
+        </html>
+        """
+        # text = 'Name: ' + str(entries['title']) + \
+        #        '\nDescription: ' + str(entries['description'])
+        from_string(text, 'cv.pdf')
+        # with open('templates/cv.html') as f:
+        #     from_file(f, 'cv.pdf')
+        return send_file('cv.pdf', as_attachment=True)
+    flash('You should to save your CV as a draft first')
+    return render_template('show_entries.html', entries=entries)
 
 
 @app.errorhandler(404)

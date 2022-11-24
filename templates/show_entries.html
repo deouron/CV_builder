@@ -2,29 +2,38 @@
 
 <ul class=entries>
 
+<form action="{{ url_for('cv_helper') }}" method=post class=cv_helper>
+    <h2>To save your CV save it as a draft first</h2>
+    <input type=submit value="Show CV">
+</form>
+
+<form action="{{ url_for('pdf_helper') }}" method=post class=pdf_helper>
+    <input type=submit value="Create pdf">
+</form>
+
 {% for entry in entries %}
     {% if session.logged_in %}
         <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
         <dl>
-        <dt>Your name:
-        <dd><input type=text size=30 name=title value="{{ entry.title }}" placeholder="your name">
-        <dt>CV's text:
-        <dd><textarea name=text rows=5 cols=40" placeholder="CV's text">{{ entry.text|safe }}</textarea>
+            <dt>Your name:
+            <dd><input type=text size=30 name=title value="{{ entry.title }}" placeholder="your name">
+            <dt>CV's description:
+            <dd><textarea name=description rows=5 cols=40" placeholder="CV's description">{{ entry.description|safe }}</textarea>
             <dd><input type=submit value="Save Draft">
         </dl>
         </form>
     {% endif %}
     <li><h1>Your draft:</h1>
         <h2>Your name:</h2> {{ entry.title }}
-        <h2>CV's text:</h2> {{ entry.text|safe }}
+        <h2>CV's description:</h2> {{ entry.description|safe }}
 {% else %}
         {% if session.logged_in %}
         <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
         <dl>
-        <dt>Your name:
-        <dd><input type=text size=30 name=title placeholder="your name">
-        <dt>CV's text:
-        <dd><textarea name=text rows=5 cols=40 placeholder="CV's text"></textarea>
+            <dt>Your name:
+            <dd><input type=text size=30 name=title placeholder="your name">
+            <dt>CV's description:
+            <dd><textarea name=description rows=5 cols=40 placeholder="CV's description"></textarea>
             <dd><input type=submit value="Save Draft">
         </dl>
         </form>
