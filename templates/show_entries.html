@@ -7,10 +7,10 @@
         <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
         <dl>
         <dt>Your name:
-        <dd><input type=text size=30 name=title value="{{ entry.title }}">
+        <dd><input type=text size=30 name=title value="{{ entry.title }}" placeholder="your name">
         <dt>CV's text:
-        <dd><textarea name=text rows=5 cols=40">{{ entry.text|safe }}</textarea>
-            <dd><input type=submit value=Save>
+        <dd><textarea name=text rows=5 cols=40" placeholder="CV's text">{{ entry.text|safe }}</textarea>
+            <dd><input type=submit value="Save Draft">
         </dl>
         </form>
     {% endif %}
@@ -22,9 +22,10 @@
         <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
         <dl>
         <dt>Your name:
-        <dd><input type=text size=30 name=title>
+        <dd><input type=text size=30 name=title placeholder="your name">
         <dt>CV's text:
-        <dd><textarea name=text rows=5 cols=40></textarea> <dd><input type=submit value=Save>
+        <dd><textarea name=text rows=5 cols=40 placeholder="CV's text"></textarea>
+            <dd><input type=submit value="Save Draft">
         </dl>
         </form>
     {% endif %}
