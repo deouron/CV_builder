@@ -1,5 +1,8 @@
 # CV_builder
 
+Пример готового резюме: 
+https://github.com/deouron/CV_builder/blob/main/cv.pdf
+
 ---
 
 Создайте сайт с помощью Flask или Django. Будем делать конструктор резюме!
